@@ -1,0 +1,67 @@
+---
+#
+# LDAP server settings
+#
+
+# List of schema names to include from /etc/openldap/schema/ directory.
+# The core schema is always included.
+openldap_schemas:
+  - cosine
+  - inetorgperson
+  - nis
+  - misc
+
+# DN of the root of the subtree (i.e. base DN).
+# Should be changed!
+openldap_suffix: o=example,c=cz
+
+# Distinguished name (DN) of LDAP superuser, relative to suffix.
+openldap_rootdn: cn=admin
+
+# Password of LDAP superuser.
+# Should be changed!
+openldap_rootpw: change-me
+
+# Number of kilobytes written to make a check point.
+openldap_checkpoint_kbyte: 32
+
+# Number of minutes after which to make a check point.
+openldap_checkpoint_minutes: 15
+
+# List of indexes.
+# Note: Index "objectClass eq" is always included.
+openldap_indexes: []
+
+# List of hashes that defines access policy.
+# - comment:  Some description (optional).
+#   to:       Selects entries and/or attributes to which the access applies.
+#   by:       One triplet or list of triplets <who> [<access>] [<control>]:
+#               <who> specifies to which enties is granted access,
+#               <access> specifies the granted acesss (optional),
+#               <control> is stop, continue, or break (optional).
+#
+# If no access controls are present, the default policy allows anyone and
+# everyone to read anything but restricts updates to rootdn.
+# (e.g., "access to * by * read")
+openldap_accesses:
+  - to: dn.base=""
+    by: '* read'
+  - to: dn.base="cn=Subschema"
+    by: '* read'
+  - to: '*'
+    by: ['self write', 'users read', 'anonymous read']
+
+
+#
+# Directories
+#
+
+# Path of the configuration directory.
+openldap_conf_dir: /etc/openldap
+
+# Path of the data directory.
+openldap_data_dir: /var/lib/openldap-data
+
+# Path of the run directory.
+openldap_run_dir: /run/openldap
+

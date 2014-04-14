@@ -1,0 +1,26 @@
+# {{ ansible_managed }}
+#
+# OpenLDAP server access control list
+#
+# See slapd.conf(5) for details on configuration options.
+# This file should NOT be world readable.
+#
+# If no access controls are present, the default policy
+# allows anyone and everyone to read anything but restricts
+# updates to rootdn. (e.g., "access to * by * read")
+#
+# rootdn can always read and write EVERYTHING!
+{% for item in openldap_accesses %}
+
+{%   if item.comment is defined %}
+# {{ item.comment }}
+{%   endif %}
+access to {{ item.to }}
+{%   if item.by is string %}
+  by {{ item.by }}
+{%   else %}
+{%     for by in item.by %}
+  by {{ by }}
+{%     endfor %}
+{%   endif %}
+{% endfor %}

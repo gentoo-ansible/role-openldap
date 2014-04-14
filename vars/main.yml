@@ -1,0 +1,2 @@
+---
+openldap_rootpw_hashed: "{{ hashed_rootpw.stdout }}"

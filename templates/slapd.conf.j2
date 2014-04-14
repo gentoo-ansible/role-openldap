@@ -1,0 +1,69 @@
+# {{ ansible_managed }}
+#
+# See slapd.conf(5) for details on configuration options.
+# This file should NOT be world readable.
+#
+include		{{ openldap_conf_dir }}/schema/core.schema
+{% for schema in openldap_schemas %}
+include		{{ openldap_conf_dir }}/schema/{{ schema }}.schema
+{% endfor %}
+
+# Include ACLs settings.
+include		{{ openldap_conf_dir }}/slapd.access.conf
+
+# Do not enable referrals until AFTER you have a working directory
+# service AND an understanding of referrals.
+#referral	ldap://root.openldap.org
+
+pidfile		{{ openldap_run_dir }}/slapd.pid
+argsfile	{{ openldap_run_dir }}/slapd.args
+
+# Load dynamic backend modules:
+modulepath		/usr/lib64/openldap/openldap
+# moduleload	back_sock.so
+# moduleload	back_shell.so
+# moduleload	back_relay.so
+# moduleload	back_passwd.so
+# moduleload	back_null.so
+# moduleload	back_monitor.so
+# moduleload	back_meta.so
+# moduleload	back_ldap.so
+# moduleload	back_dnssrv.so
+
+# Sample security restrictions
+#	Require integrity protection (prevent hijacking)
+#	Require 112-bit (3DES or better) encryption for updates
+#	Require 63-bit encryption for simple bind
+# security ssf=1 update_ssf=112 simple_bind=64
+
+
+#######################################################################
+# BDB database definitions
+#######################################################################
+
+# Database backend.
+database	hdb
+
+# DN of the root of the subtree.
+suffix		"{{ openldap_suffix }}"
+
+# Make check point whenever 32 kbyte written or 15 minutes has elapsed
+# whichever occurs first.
+checkpoint	{{ openldap_checkpoint_kbyte }} {{ openldap_checkpoint_minutes }}
+
+# DN of LDAP superuser.
+rootdn		"{{ openldap_rootdn }},{{ openldap_suffix }}"
+
+# Password of LDAP superuser.
+# Cleartext passwords, especially for the rootdn, should
+# be avoid.  See slappasswd(8) and slapd.conf(5) for details.
+# Use of strong authentication encouraged.
+rootpw		"{{ openldap_rootpw_hashed }}"
+
+# The database directory MUST exist prior to running slapd AND 
+# should only be accessible by the slapd and slap tools.
+# Mode 700 recommended.
+directory	{{ openldap_data_dir }}
+
+# Include indexes settings.
+include		{{ openldap_conf_dir }}/slapd.index.conf
