@@ -13,10 +13,10 @@ openldap_schemas:
 
 # DN of the root of the subtree (i.e. base DN).
 # Should be changed!
-openldap_suffix: o=example,c=cz
+openldap_suffix: dc=example,dc=cz
 
-# Distinguished name (DN) of LDAP superuser, relative to suffix.
-openldap_rootdn: cn=admin
+# Distinguished name (DN) of the LDAP superuser relative to suffix.
+openldap_rootdn_prefix: cn=admin
 
 # Password of LDAP superuser.
 # Should be changed!
@@ -31,6 +31,9 @@ openldap_checkpoint_minutes: 15
 # List of indexes.
 # Note: Index "objectClass eq" is always included.
 openldap_indexes: []
+
+# Whether this role should run reindex on indexes change.
+openldap_reindex_allowed: true
 
 # List of hashes that defines access policy.
 # - comment:  Some description (optional).
@@ -53,8 +56,12 @@ openldap_accesses:
 
 
 #
-# Directories
+# Paths
 #
+
+# Path of the LDIF (template) file to populate LDAP with.
+# Set empty string to disable.
+openldap_populate_ldif: base.ldif.j2
 
 # Path of the configuration directory.
 openldap_conf_dir: /etc/openldap
@@ -64,4 +71,3 @@ openldap_data_dir: /var/lib/openldap-data
 
 # Path of the run directory.
 openldap_run_dir: /run/openldap
-

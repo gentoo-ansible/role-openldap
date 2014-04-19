@@ -1,2 +1,6 @@
 ---
+openldap_rootdn: "{{ openldap_rootdn_prefix }},{{ openldap_suffix }}"
 openldap_rootpw_hashed: "{{ hashed_rootpw.stdout }}"
+
+_suffix_value_regex_: '"s/^[a-z]+=(.*),.*/\\1/"'
+openldap_suffix_value: "{{ lookup('pipe', 'echo %s | sed -E %s' | format(openldap_suffix, _suffix_value_regex_)) }}"

@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+#
+# Password of LDAP superuser.
+#
+# Cleartext passwords, especially for the rootdn, should
+# be avoid.  See slappasswd(8) and slapd.conf(5) for details.
+# Use of strong authentication encouraged.
+
+rootpw "{{ openldap_rootpw_hashed }}"

@@ -1,74 +1,14 @@
 ---
-- name: install openldap
-  portage: package=net-nds/openldap
-  tags: packages
-
-- name: ensure directories privileges
-  file: >
-    path={{ item }}
-    state=directory
-    owner=ldap group=ldap mode=0700
-  with_items:
-    - "{{ openldap_data_dir }}"
-    - "{{ openldap_run_dir }}"
-
-- name: remove useless config files
-  file: >
-    path={{ openldap_conf_dir }}/{{ item }}
-    state=absent
-  with_items:
-    - ldap.conf.default
-    - slapd.conf.default
-    - slapd.ldif
-    - slapd.ldif.default
-    - DB_CONFIG.example
-  tags: cleanup
-
-- name: hash admin password
-  command: slappasswd -s {{ openldap_rootpw }}
-  register: hashed_rootpw
-  tags: configuration
-
-- name: configure indexes
-  template: >
-    src=slapd.index.conf.j2
-    dest={{ openldap_conf_dir }}/slapd.index.conf
-    owner=root group=ldap mode=0640
-  notify: LDAP reindex
-  tags: configuration
-
-- name: configure server and ACLs
-  template: >
-    src={{ item }}.j2
-    dest={{ openldap_conf_dir }}/{{ item }}
-    owner=root group=ldap mode=0640
-    validate='slaptest -u -f %s'
-  with_items:
-    - slapd.access.conf
-    - slapd.conf
-  notify: restart slapd
-  tags: configuration
-
-- name: configure database backend
-  template: >
-    src=DB_CONFIG.j2
-    dest={{ openldap_conf_dir }}/DB_CONFIG
-    owner=root group=root mode=0600
-  notify: restart slapd
-  tags: configuration
-
-- name: symlink DB_CONFIG to data directory
-  file: >
-    src={{ openldap_conf_dir }}/DB_CONFIG
-    dest={{ openldap_data_dir }}/DB_CONFIG
-    state=link
-
-- name: configure LDAP client defaults
-  template: >
-    src=ldap.conf.j2
-    dest={{ openldap_conf_dir }}/ldap.conf
-    owner=root group=root mode=0644
-  tags: configuration
+- include: package.yml tags=packages
+- include: configuration.yml tags=configuration
 
 - name: enable and start slapd
   service: name=slapd enabled=true state=started
+  tags: services
+
+- name: populate LDAP from LDIF file
+  ldap: >
+    bind_dn={{ openldap_rootdn }}
+    bind_password={{ openldap_rootpw }}
+    src={{ openldap_populate_ldif }}
+  when: openldap_populate_ldif != ""

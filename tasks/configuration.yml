@@ -1,0 +1,51 @@
+---
+- name: check whether slapd.rootpw.conf exists
+  command: "test -f {{ openldap_conf_dir }}/slapd.rootpw.conf"
+  register: rootpw_exists
+  changed_when: false
+  failed_when: false
+
+- name: hash superuser password
+  command: 'slappasswd -s {{ openldap_rootpw }}'
+  changed_when: false
+  register: hashed_rootpw
+  when: rootpw_exists.rc != 0
+
+- name: write superuser password
+  template: >
+    src=slapd.rootpw.conf.j2
+    dest={{ openldap_conf_dir }}/slapd.rootpw.conf
+    owner=root group=ldap mode=0640
+  notify: restart slapd
+  when: rootpw_exists.rc != 0
+
+- name: configure indexes
+  template: >
+    src=slapd.index.conf.j2
+    dest={{ openldap_conf_dir }}/slapd.index.conf
+    owner=root group=ldap mode=0640
+  notify: stop and reindex ldap
+
+- name: configure server and ACLs
+  template: >
+    src={{ item }}.j2
+    dest={{ openldap_conf_dir }}/{{ item }}
+    owner=root group=ldap mode=0640
+    validate='slaptest -u -f %s'
+  with_items:
+    - slapd.access.conf
+    - slapd.conf
+  notify: restart slapd
+
+- name: configure database backend
+  template: >
+    src=DB_CONFIG.j2
+    dest={{ openldap_conf_dir }}/DB_CONFIG
+    owner=root group=root mode=0600
+  notify: restart slapd
+
+- name: configure LDAP client defaults
+  template: >
+    src=ldap.conf.j2
+    dest={{ openldap_conf_dir }}/ldap.conf
+    owner=root group=root mode=0644

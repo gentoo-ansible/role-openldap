@@ -1,0 +1,14 @@
+dn: {{ openldap_suffix }}
+dc: {{ openldap_suffix_value }}
+objectClass: top
+objectClass: domain
+
+dn: ou=People,{{ openldap_suffix }}
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Group,{{ openldap_suffix }}
+ou: Group
+objectClass: top
+objectClass: organizationalUnit

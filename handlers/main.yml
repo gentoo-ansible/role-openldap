@@ -1,6 +1,17 @@
 ---
+- name: stop and reindex ldap
+  command: 'true'
+  when: openldap_reindex_allowed
+  notify:
+    - stop slapd
+    - reindex slapd
+
+- name: stop slapd
+  service: name=slapd state=stopped
+
+- name: reindex slapd
+  sudo_user: ldap
+  shell: 'test -f {{ openldap_data_dir }}/dn2id.bdb && slapindex'
+
 - name: restart slapd
   service: name=slapd state=restarted
-
-- name: LDAP reindex
-  command: slapindex
