@@ -49,3 +49,9 @@
     src=ldap.conf.j2
     dest={{ openldap_conf_dir }}/ldap.conf
     owner=root group=root mode=0644
+
+- name: symlink DB_CONFIG to data directory
+  file: >
+    src={{ openldap_conf_dir }}/DB_CONFIG
+    dest={{ openldap_data_dir }}/DB_CONFIG
+    state=link

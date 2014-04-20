@@ -22,9 +22,3 @@
     - slapd.ldif.default
     - DB_CONFIG.example
   tags: cleanup
-
-- name: symlink DB_CONFIG to data directory
-  file: >
-    src={{ openldap_conf_dir }}/DB_CONFIG
-    dest={{ openldap_data_dir }}/DB_CONFIG
-    state=link
