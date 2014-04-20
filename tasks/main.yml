@@ -1,5 +1,5 @@
 ---
-- include: package.yml tags=packages
+- include: packages.yml tags=packages
 - include: configuration.yml tags=configuration
 
   # trigger handlers now to avoid unnecessary restarts and ensure that slapd
