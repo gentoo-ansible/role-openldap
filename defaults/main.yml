@@ -13,7 +13,7 @@ openldap_schemas:
 
 # DN of the root of the subtree (i.e. base DN).
 # Should be changed!
-openldap_suffix: dc=example,dc=cz
+openldap_suffix: 'dc=example,dc=cz'
 
 # Distinguished name (DN) of the LDAP superuser relative to suffix.
 openldap_rootdn_prefix: cn=admin
@@ -30,7 +30,8 @@ openldap_checkpoint_minutes: 15
 
 # List of indexes.
 # Note: Index "objectClass eq" is always included.
-openldap_indexes: []
+openldap_indexes:
+  - 'uid,uidNumber,gidNumber,memberUid eq'
 
 # Whether this role should run reindex on indexes change.
 openldap_reindex_allowed: true
@@ -45,12 +46,10 @@ openldap_reindex_allowed: true
 #
 # If no access controls are present, the default policy allows anyone and
 # everyone to read anything but restricts updates to rootdn.
-# (e.g., "access to * by * read")
+# Note that rootdn can ALWAYS read and write everything!
 openldap_accesses:
-  - to: dn.base=""
-    by: '* read'
-  - to: dn.base="cn=Subschema"
-    by: '* read'
+  - to: 'attrs=userPassword'
+    by: ['anonymous auth', 'self write', '* none']
   - to: '*'
     by: ['self write', 'users read', 'anonymous read']
 
