@@ -2,6 +2,10 @@
 - include: package.yml tags=packages
 - include: configuration.yml tags=configuration
 
+  # trigger handlers now to avoid unnecessary restarts and ensure that slapd
+  # will be started after reindex
+- meta: flush_handlers
+
 - name: enable and start slapd
   service: name=slapd enabled=true state=started
   tags: services
