@@ -3,7 +3,20 @@
 # LDAP server settings
 #
 
-# List of schema names to include from /etc/openldap/schema/ directory.
+# List of schemas to include. The item can be one of the three types:
+#   - NAME
+#     String with name of the built-in schema located in
+#     {{openldap_schema_dir}}.
+#
+#   - { src: PATH, name: NAME }
+#     Hash with 'src' attribute that defines a local path of the schema file to
+#     copy into {{openldap_schema_dir}} and 'name' of the destination file.
+#
+#   - { url: URL, name: NAME }
+#     Hash with 'url' attribute that defines URL of the schema to download into
+#     {{openldap_schema_dir}} and 'name' of the destination file.
+#
+# NAME should omit .schema suffix, it'll be added implicitly!
 # The core schema is always included.
 openldap_schemas:
   - cosine
@@ -64,6 +77,9 @@ openldap_populate_ldif: base.ldif.j2
 
 # Path of the configuration directory.
 openldap_conf_dir: /etc/openldap
+
+# Path of the schema directory.
+openldap_schema_dir: "{{ openldap_conf_dir }}/schema"
 
 # Path of the data directory.
 openldap_data_dir: /var/lib/openldap-data
