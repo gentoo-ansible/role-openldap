@@ -1,6 +1,6 @@
 ---
-- include: packages.yml tags=packages
-- include: configuration.yml tags=configuration
+- include: install.yml tags=install
+- include: configure.yml tags=configure
 
   # trigger handlers now to avoid unnecessary restarts and ensure that slapd
   # will be started after reindex
@@ -16,3 +16,4 @@
     bind_password={{ openldap_rootpw }}
     src={{ openldap_populate_ldif }}
   when: openldap_populate_ldif != ""
+  tags: populate

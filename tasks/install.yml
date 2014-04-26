@@ -1,6 +1,7 @@
 ---
 - name: install openldap
   portage: package=net-nds/openldap
+  tags: packages
 
 - name: ensure directories privileges
   file: >
