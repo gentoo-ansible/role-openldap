@@ -17,6 +17,7 @@ include		{{ openldap_conf_dir }}/slapd.access.conf
 
 pidfile		{{ openldap_run_dir }}/slapd.pid
 argsfile	{{ openldap_run_dir }}/slapd.args
+loglevel	{{ openldap_loglevel | join(' ') }}
 
 # Load dynamic backend modules:
 modulepath		/usr/lib64/openldap/openldap

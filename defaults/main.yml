@@ -24,6 +24,30 @@ openldap_schemas:
   - nis
   - misc
 
+# List of log levels/subsystems to log; any combination of:
+# - trace:    trace function calls
+# - packets:  debug packet handling
+# - args:     heavy trace debugging (function args)
+# - conns:    connection management
+# - BER:      print out packets sent and received
+# - filter:   search filter processing
+# - config:   configuration file processing
+# - ACL:      access control list processing
+# - stats:    connections, LDAP operations, results (recommended)
+# - stats2:   stats log entries sent
+# - shell:    print communication with shell backends
+# - parse:    entry parsing
+# - sync:     LDAPSync replication
+# - none:     only messages that get logged whatever log level is set
+openldap_loglevel:
+  - none
+
+# Number of kilobytes written to make a check point.
+openldap_checkpoint_kbyte: 32
+
+# Number of minutes after which to make a check point.
+openldap_checkpoint_minutes: 15
+
 # DN of the root of the subtree (i.e. base DN).
 # Should be changed!
 openldap_suffix: 'dc=example,dc=cz'
@@ -34,12 +58,6 @@ openldap_rootdn_prefix: cn=admin
 # Password of LDAP superuser.
 # Should be changed!
 openldap_rootpw: change-me
-
-# Number of kilobytes written to make a check point.
-openldap_checkpoint_kbyte: 32
-
-# Number of minutes after which to make a check point.
-openldap_checkpoint_minutes: 15
 
 # List of indexes.
 # Note: Index "objectClass eq" is always included.
