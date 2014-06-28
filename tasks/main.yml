@@ -7,7 +7,7 @@
 - meta: flush_handlers
 
 - name: enable and start slapd
-  service: name=slapd enabled=true state=started
+  service: name=slapd enabled=yes state=started
   tags: services
 
 - name: populate LDAP from LDIF file
