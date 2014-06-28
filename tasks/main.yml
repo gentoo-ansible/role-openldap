@@ -10,6 +10,12 @@
   service: name=slapd enabled=yes state=started
   tags: services
 
+- name: ensure that LDAP port is open
+  wait_for: >
+    port=389
+    timeout=10
+  tags: check
+
 - name: populate LDAP from LDIF file
   ldap: >
     bind_dn={{ openldap_rootdn }}
