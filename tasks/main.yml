@@ -1,6 +1,6 @@
 ---
 - include: install.yml tags=install
-- include: configure.yml tags=configure
+- include: configure.yml tags=config
 
   # trigger handlers now to avoid unnecessary restarts and ensure that slapd
   # will be started after reindex
