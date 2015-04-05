@@ -1,6 +1,9 @@
 ---
-- name: install openldap
-  portage: package=net-nds/openldap
+- name: install openldap and python-ldap
+  portage: package={{ item }}
+  with_items:
+    - net-nds/openldap
+    - dev-python/python-ldap
   tags: packages
 
 - name: ensure directories privileges

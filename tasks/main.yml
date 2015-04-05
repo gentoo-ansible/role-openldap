@@ -16,6 +16,7 @@
     timeout=10
   tags: check
 
+# Requires ldap module, https://github.com/ansible/ansible/pull/7073
 - name: populate LDAP from LDIF file
   ldap: >
     bind_dn={{ openldap_rootdn }}
