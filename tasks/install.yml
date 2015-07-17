@@ -32,9 +32,11 @@
     src={{ item.src }}
     dest={{ openldap_schema_dir }}/{{ item.name }}.schema
   with_items: openldap_schemas | select('mapping') | selectattr('src', 'defined') | list
+  notify: restart slapd
 
 - name: download external schemas
   get_url: >
     url={{ item.url }}
     dest={{ openldap_schema_dir }}/{{ item.name }}.schema
   with_items: openldap_schemas | select('mapping') | selectattr('url', 'defined') | list
+  notify: restart slapd
